@@ -16,18 +16,9 @@ public class GameMap : MonoBehaviour
     private float TileWidth = 10;
     private float TileHeight = 10;
     private Transform GameBoard;
-    public MapLocation[,] mapLocations = new MapLocation[5, 5];
-    // Start is called before the first frame update
-    void Awake()
-    {
-        BoardSetUp();
-    }
+    public MapLocation[,] MapLocations = new MapLocation[5, 5];
 
-    public Vector3 MapIndexToWorld(int x, int y){
-        return new Vector3(x * TileHeight, 0, y * TileWidth);
-    }
-
-    private void BoardSetUp()
+    public void BoardSetUp()
     {
         GameBoard = this.transform;
 
@@ -35,39 +26,57 @@ public class GameMap : MonoBehaviour
         {
             for (int x = 0; x < MapX; x++)
             {
-                // Create the map tile
-                GameObject Tile = Instantiate(MapTile, new Vector3(x * TileHeight, 0, y * TileWidth), Quaternion.identity);
-                Tile.transform.SetParent(GameBoard);
-                Tile.name = "MapTile(" + x + "," + y + ")";
-                MapLocation mapLocation = Tile.GetComponent<MapLocation>();
-                mapLocation.Location = new Vector2Int(x,y);
-                mapLocations[x,y] = mapLocation; // Create the array of locations
-
-                // Put the correct piece in its starting position
-                // We only put pieces on the bottom row and the top row
-                if(y == 0 | y == MapY - 1){
-                    GameObject Piece;
-                    // The middle spot is reserved for the master
-                    if(x == MapX / 2){
-                        mapLocation.isThrone = true;
-                        Piece = Instantiate(Master, new Vector3(x * TileHeight, 3, y * TileWidth), Quaternion.identity);
-                        Piece.GetComponent<PlayerPiece>().isMaster = true;
-                    }
-                    // It wasn't a master's spot, so spawn a student
-                    else Piece = Instantiate(Student, new Vector3(x * TileHeight, 2, y * TileWidth), Quaternion.identity);
-                 // Set the piece's player
-                 PlayerPiece playerPiece = Piece.GetComponent<PlayerPiece>();
-                 playerPiece.PlayerOwnerColor = y == 0 ? PlayerColor.BLUE_PLAYER : PlayerColor.RED_PLAYER;
-                 playerPiece.PlayerOwner = y == 0 ? controller.BluePlayer : controller.RedPlayer;
-                 playerPiece.gameMap = this;
-                 playerPiece.tile = mapLocation;
-                 playerPiece.tile.Location = new Vector2Int(x,y);
-                 playerPiece.GetComponent<MeshRenderer>().material = playerPiece.PlayerOwnerColor == PlayerColor.BLUE_PLAYER ? Player1Mat : Player2Mat; 
-                playerPiece.transform.SetParent(GameBoard);
-                playerPiece.name = "Player " + playerPiece.PlayerOwner + " " + (playerPiece.isMaster ? "Master" : "Student");
-                mapLocation.piece = playerPiece;
+                MapLocation _mapLocation = CreateMapTile(x,y);
+                GameObject _piece = CreatePiece(_mapLocation);
+                if(_piece != null){
+                    PlayerPiece playerPiece = _piece.GetComponent<PlayerPiece>();
+                    InitializeSettings(playerPiece, _mapLocation);
+                }
             }
         }
     }
-}
+
+    private MapLocation CreateMapTile(int x, int y){
+        GameObject Tile = Instantiate(MapTile, new Vector3(x * TileHeight, 0, y * TileWidth), Quaternion.identity);
+        Tile.transform.SetParent(GameBoard);
+        Tile.name = "MapTile(" + x + "," + y + ")";
+        MapLocation mapLocation = Tile.GetComponent<MapLocation>();
+        mapLocation.Location = new Vector2Int(x,y);
+        MapLocations[x,y] = mapLocation;
+
+        return mapLocation;
+    }
+
+    private GameObject CreatePiece(MapLocation mapLocation){
+        int x = mapLocation.Location.x;
+        int y = mapLocation.Location.y;
+        GameObject piece = null;
+        if(y == 0 | y == MapY - 1){
+            
+        // The middle spot is reserved for the master
+            if(x == MapX / 2){
+                mapLocation.isThrone = true;
+                piece = Instantiate(Master, new Vector3(x * TileHeight, 3, y * TileWidth), Quaternion.identity);
+                piece.GetComponent<PlayerPiece>().isMaster = true;
+            }
+            // It wasn't a master's spot, so spawn a student
+            else piece = Instantiate(Student, new Vector3(x * TileHeight, 2, y * TileWidth), Quaternion.identity);
+        }
+
+        return piece;
+    }
+
+    private void InitializeSettings(PlayerPiece _playerPiece, MapLocation _mapLocation){
+        int x = _mapLocation.Location.x;
+        int y = _mapLocation.Location.y;
+        _playerPiece.PlayerOwnerColor = y == 0 ? PlayerColor.BLUE_PLAYER : PlayerColor.RED_PLAYER;
+        _playerPiece.PlayerOwner = y == 0 ? controller.BluePlayer : controller.RedPlayer;
+        _playerPiece.gameMap = this;
+        _playerPiece.tile = _mapLocation;
+        _playerPiece.tile.Location = new Vector2Int(x,y);
+        _playerPiece.GetComponent<MeshRenderer>().material = _playerPiece.PlayerOwnerColor == PlayerColor.BLUE_PLAYER ? Player1Mat : Player2Mat; 
+        _playerPiece.transform.SetParent(GameBoard);
+        _playerPiece.name = "Player " + _playerPiece.PlayerOwner + " " + (_playerPiece.isMaster ? "Master" : "Student");
+        _mapLocation.piece = _playerPiece;
+    }
 }

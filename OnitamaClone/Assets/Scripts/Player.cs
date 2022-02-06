@@ -4,14 +4,14 @@ using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
 
+//This is the base class for all AI and human players, it should not be set to a specific player
 public class Player : MonoBehaviour{
     [SerializeField] protected Controller controller;
     [SerializeField] protected MoveCard[] PlayerMoveCards;
     [SerializeField] protected PlayerColor OwnerColor;
     public PlayerPiece MasterPiece;
     public MapLocation MasterStartingLocation;
-    public List<PlayerPiece> availablePlayerPieces =>  GetPlayerPieces();
-    protected List<Vector2Int> validMoveLocations =>  controller.GetValidMoves(focusedMoveCard, focusedPlayerPiece);
+    protected List<Vector2Int> _validMoveLocations =>  controller.GetValidMoves(focusedMoveCard, focusedPlayerPiece);
     public PlayerPiece focusedPlayerPiece {protected set; get;}
     public MoveCard focusedMoveCard {protected set; get;}
     public MapLocation focusedLocationTile {protected set; get;}
@@ -23,7 +23,11 @@ public class Player : MonoBehaviour{
     }
 
     private void Start(){
-        foreach(PlayerPiece piece in availablePlayerPieces){
+        SetMasterPiece();
+    }
+
+    private void SetMasterPiece(){
+        foreach(PlayerPiece piece in GetAvailablePlayerPieces()){
             if(piece.isMaster){
                 MasterPiece = piece;
                 MasterStartingLocation = piece.tile;
@@ -32,19 +36,19 @@ public class Player : MonoBehaviour{
     }
 
     public bool HasMaster(){
-        return (availablePlayerPieces.Contains(MasterPiece));
+        return (GetAvailablePlayerPieces().Contains(MasterPiece));
     }
 
-    public List<PlayerPiece> GetPlayerPieces(){
-        List<PlayerPiece> activePlayerPieces = new List<PlayerPiece>();
-        PlayerPiece[] allPieces = FindObjectsOfType<PlayerPiece>();
-        foreach(PlayerPiece playerPiece in allPieces){
-            if(playerPiece.PlayerOwner == this){
-                activePlayerPieces.Add(playerPiece);
+    public List<PlayerPiece> GetAvailablePlayerPieces(){
+        List<PlayerPiece> _activePlayerPieces = new List<PlayerPiece>();
+        PlayerPiece[] _allPieces = FindObjectsOfType<PlayerPiece>();
+        foreach(PlayerPiece _playerPiece in _allPieces){
+            if(_playerPiece.PlayerOwner == this){
+                _activePlayerPieces.Add(_playerPiece);
             }
         }
-        Debug.Log("Found " + activePlayerPieces.Count + " Player Pieces", this);
-        return activePlayerPieces;
+        Debug.Log("Found " + _activePlayerPieces.Count + " Player Pieces", this);
+        return _activePlayerPieces;
     }
 
     public void TakeTurn(){
@@ -59,22 +63,21 @@ public class Player : MonoBehaviour{
         }
     }
     virtual protected void ChooseCard(){
-        controller.focusedMoveCard = PlayerMoveCards[Random.Range(0,1)];
     }
 
     virtual protected void ChoosePiece(){
-        controller.focusedPlayerPiece = availablePlayerPieces[Random.Range(0, availablePlayerPieces.Count)];
     }
 
     virtual protected void ChooseMove(){
-        List<Vector2Int> availableMoveLocations = validMoveLocations;
-        Vector2Int chosenLocation = availableMoveLocations[Random.Range(0, availableMoveLocations.Count)];
-        controller.focusedLocationTile = controller.gameMap.mapLocations[chosenLocation.x, chosenLocation.y];
     }
 
     public void ResetSelections(){
         focusedPlayerPiece = null;
         focusedMoveCard = null;
         focusedLocationTile = null;
-    }      
+    }   
+
+    protected void ConcedeGame(){
+        Debug.Log(this + " concedes because they have no possible turn");
+    }   
 }

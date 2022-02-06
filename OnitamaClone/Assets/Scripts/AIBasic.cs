@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 public class AIBasic : Player
 {
-    private int iterations = 0;
+    private int _turnAttempts = 0;
     private int MaxIterations = 10;
     override protected void ChooseCard(){
         int index = Random.Range(0,1);
@@ -13,33 +13,33 @@ public class AIBasic : Player
     }
 
     override protected void ChoosePiece(){
-        List<PlayerPiece> availablePieces = availablePlayerPieces;
+        List<PlayerPiece> availablePieces = GetAvailablePlayerPieces();
+        if(availablePieces.Count == 0){
+            ConcedeGame();
+            return;
+        }
         int index = Random.Range(0, availablePieces.Count);
         focusedPlayerPiece = availablePieces[index];
     }
 
     override protected void ChooseMove(){
-        List<Vector2Int> availableMoveLocations = validMoveLocations;
-        if(validMoveLocations.Count == 0){
-            iterations += 1;
-            if(iterations <= MaxIterations){
-            ResetSelections();
-            TakeTurn();
+        List<Vector2Int> _availableMoveLocations = _validMoveLocations;
+        if(_validMoveLocations.Count == 0){
+            _turnAttempts += 1;
+            if(_turnAttempts <= MaxIterations){
+                ResetSelections();
+                TakeTurn();
             }
             else{
-                Debug.Log("Couldn't find a good turn");
+                ConcedeGame();
                 return;
             }
         }
         else{
-            foreach(Vector2Int move in availableMoveLocations){
-                Debug.Log("Possible choice to move to: " + move);
-            }
-            int index = Random.Range(0, availableMoveLocations.Count);
-            Vector2Int chosenLocation = availableMoveLocations[index];
-            focusedLocationTile = controller.gameMap.mapLocations[chosenLocation.x, chosenLocation.y];
-            
-            iterations = 0;
+            int index = Random.Range(0, _availableMoveLocations.Count);
+            Vector2Int chosenLocation = _availableMoveLocations[index];
+            focusedLocationTile = controller.GameMap.MapLocations[chosenLocation.x, chosenLocation.y];
+            _turnAttempts = 0;
         }
     }
 }

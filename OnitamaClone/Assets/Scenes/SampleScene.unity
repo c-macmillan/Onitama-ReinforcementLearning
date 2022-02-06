@@ -662,7 +662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6868623b7ff075f4ba520ee9692d511d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameMap: {fileID: 1111010089}
+  GameMap: {fileID: 1111010089}
   deckOfCards:
   - {fileID: 11400000, guid: 941c4a7294d3ede4f860bd3b15451b78, type: 2}
   - {fileID: 11400000, guid: bc577e32b5093534c8a93ec1b5e3be3d, type: 2}
@@ -726,6 +726,8 @@ MonoBehaviour:
   - {fileID: 1422723497}
   - {fileID: 740429705}
   OwnerColor: 1
+  MasterPiece: {fileID: 0}
+  MasterStartingLocation: {fileID: 0}
 --- !u!4 &1419684273
 Transform:
   m_ObjectHideFlags: 0
@@ -785,6 +787,8 @@ MonoBehaviour:
   - {fileID: 637466896}
   - {fileID: 1205631311}
   OwnerColor: 0
+  MasterPiece: {fileID: 0}
+  MasterStartingLocation: {fileID: 0}
 --- !u!4 &1583375976
 Transform:
   m_ObjectHideFlags: 0

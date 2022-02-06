@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
-    public GameMap gameMap;
+    public GameMap GameMap;
     public List<ScriptableObjectMoveCard> deckOfCards;
     public MoveCard[] redPlayerCards = new MoveCard[2];
     public MoveCard[] bluePlayerCards = new MoveCard[2];
@@ -22,6 +22,7 @@ public class Controller : MonoBehaviour
     private void Awake() {
         DealCards();
         activePlayer = sidelineCard.moveCardData.firstPlayerColor == PlayerColor.RED_PLAYER ? RedPlayer : BluePlayer;
+        GameMap.BoardSetUp();
     }
 
     private void Update() {
@@ -44,16 +45,15 @@ public class Controller : MonoBehaviour
 
     private void CheckIfCurrentPlayerWon(){
         Player opponent = activePlayer == RedPlayer ? BluePlayer : RedPlayer;
-        if(!opponent.HasMaster()){
+        if(opponent.HasMaster() == false){
             currentPlayerWon = true;
         }
         if(opponent.MasterStartingLocation == activePlayer.MasterPiece.tile){
             currentPlayerWon = true;
         }
-        if(opponent.availablePlayerPieces.Count == 0){
+        if(opponent.GetAvailablePlayerPieces().Count == 0){
             currentPlayerWon = true;
         }
-
     }
 
     private void ChangeActivePlayer(){
@@ -81,29 +81,23 @@ public class Controller : MonoBehaviour
         focusedMoveCard = activePlayer.focusedMoveCard;
         focusedPlayerPiece = activePlayer.focusedPlayerPiece;
 
-        if(CheckIfValidMove(focusedPlayerPiece, focusedLocationTile, focusedMoveCard)){
+        if(IsValidMove(focusedPlayerPiece, focusedLocationTile, focusedMoveCard)){
             if(focusedLocationTile.piece != null){
                 focusedLocationTile.piece.Captured();
                 }
             focusedPlayerPiece.Move(focusedLocationTile);
-            Debug.Log("Moved piece " + focusedPlayerPiece + " to " + focusedLocationTile, this);
             turnComplete = true;
         }
         else {
-            Debug.Log("Invalid move, try again");
+            Debug.Log("Cannot move " + focusedPlayerPiece + " to " + focusedLocationTile + " using " + focusedMoveCard);
             focusedLocationTile = null;
         }
     }
 
-    private bool CheckIfValidMove(PlayerPiece chosenPlayerPiece, MapLocation chosenLocationTile, MoveCard chosenMoveCard){
+    private bool IsValidMove(PlayerPiece chosenPlayerPiece, MapLocation chosenLocationTile, MoveCard chosenMoveCard){
         
         List<Vector2Int> validMoves = GetValidMoves(chosenMoveCard, chosenPlayerPiece);
-        if(validMoves.Contains(chosenLocationTile.Location)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return validMoves.Contains(chosenLocationTile.Location);
     }
 
     public List<Vector2Int> GetValidMoves(MoveCard chosenCard, PlayerPiece chosenPiece){
@@ -111,10 +105,10 @@ public class Controller : MonoBehaviour
 
         List<Vector2Int> validMoves = new List<Vector2Int>();
         foreach(Vector2Int move in possibleMoves){
-            if(move.x < 0 | move.y < 0 | move.x >= gameMap.MapX | move.y >= gameMap.MapY){
+            if(move.x < 0 | move.y < 0 | move.x >= GameMap.MapX | move.y >= GameMap.MapY){
                 continue;
             }
-            PlayerPiece otherPlayerPiece = gameMap.mapLocations[move.x, move.y].piece;
+            PlayerPiece otherPlayerPiece = GameMap.MapLocations[move.x, move.y].piece;
             if( otherPlayerPiece != null){
                 if(chosenPiece.PlayerOwner == otherPlayerPiece.PlayerOwner){
                     continue;
@@ -148,7 +142,6 @@ public class Controller : MonoBehaviour
         card = deckOfCards[i];
         deckOfCards.RemoveAt(i);
         return card;
-
     }
 
     public void Clicked(MapLocation clickedLocation){
@@ -166,30 +159,6 @@ public class Controller : MonoBehaviour
         if(clickedPiece.tag == "Piece"){
             focusedPlayerPiece = clickedPiece;
         }
-        
-    }
-
-    public List<Vector2Int> getValidLocations(PlayerPiece focusedPiece, MoveCard focusedMoveCard){
-        List<Vector2Int> validLocations = new List<Vector2Int>();
-        validLocations = ValidateLocations(MapMovesToBoardLocations(focusedMoveCard.moveCardData.availableMoves, focusedPiece));      
-        return validLocations;
-    }
-
-    private List<Vector2Int> ValidateLocations(List<Vector2Int> possibleLocations){
-        List<Vector2Int> validLocations = new List<Vector2Int>();
-        foreach(Vector2Int location in possibleLocations){
-            if((location.x < 0) | (location.y < 0) | (location.x >= gameMap.MapX) | (location.y >= gameMap.MapY)) {
-                continue;
-            }
-            PlayerPiece targetTilesPiece = gameMap.mapLocations[location.x, location.y].piece;
-            if(targetTilesPiece != null){
-                if(targetTilesPiece.PlayerOwner == activePlayer){
-                continue;
-                }
-            }
-            validLocations.Add(location);
-        }
-        return validLocations;
     }
 
     private List<Vector2Int> MapMovesToBoardLocations(List<Vector2Int> possibleLocations, PlayerPiece focusedPiece){
@@ -200,19 +169,5 @@ public class Controller : MonoBehaviour
             mappedLocations.Add(location);
         }
         return mappedLocations;
-    }
-
-    List<Vector2Int> GetPlayerMoves(MoveCard[] playerCards){
-        List<Vector2Int> moveLocations = new List<Vector2Int>();
-        foreach(MoveCard card in playerCards){
-            foreach(Vector2Int location in card.GetMoves()){
-                    moveLocations.Add(location);
-                    }
-            }
-        return moveLocations;
-    }
-
-    public MapLocation getMapLocationFromIndex(Vector2Int location){
-        return gameMap.mapLocations[location.x, location.y];
     }
 }
