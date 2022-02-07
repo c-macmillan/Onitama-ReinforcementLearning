@@ -15,54 +15,71 @@ public class Controller : MonoBehaviour
     public PlayerPiece focusedPlayerPiece;
     public MoveCard focusedMoveCard;
     public MapLocation focusedLocationTile;
-    private bool turnComplete = false;
-    private bool currentPlayerWon = false;
     private string LOCATION_TAG = "Location";
+    private bool _hasStarted = false;
 
     private void Awake() {
         DealCards();
         activePlayer = sidelineCard.moveCardData.firstPlayerColor == PlayerColor.RED_PLAYER ? RedPlayer : BluePlayer;
         GameMap.BoardSetUp();
     }
+    private void Start() {
+        
+    }
 
-    private void Update() {
-        if(currentPlayerWon){
-            Debug.Log("You WIN!!!!!!");
+    private void Update(){
+        if(_hasStarted == false){
+            _hasStarted = true;
+            Debug.Log("This should only be called once?");
+            activePlayer.TakeTurn();
+        }
+    }
+
+    public void EndTurn(){
+        if(MoveConfirmed() == false){
+            activePlayer.TakeTurn();
             return;
         }
-        if(!turnComplete){
-            activePlayer.TakeTurn();
-            ConfirmMove();
-            CheckIfCurrentPlayerWon();
-            }
-        else{
+        if(HasCurrentPlayerWon()){
+            WinScreen();
+        }
+        else {
             ChangeActivePlayer();
             ExchangeCards();
             ResetSelections();
-            turnComplete = false;
+            activePlayer.TakeTurn();
         }
     }
 
-    private void CheckIfCurrentPlayerWon(){
+    private void WinScreen(){
+        Debug.Log(activePlayer + " WINS !!!!!!");
+
+    }
+
+    private bool HasCurrentPlayerWon(){
         Player opponent = activePlayer == RedPlayer ? BluePlayer : RedPlayer;
-        if(opponent.HasMaster() == false){
-            currentPlayerWon = true;
+        if(opponent.AvailablePieces.Contains(opponent.MasterPiece) == false){
+            Debug.Log(opponent + " has these pieces left: ");
+            foreach(PlayerPiece _piece in opponent.AvailablePieces){
+                Debug.Log(_piece);
+            }
+            Debug.Log(opponent + " Lost Their Master");
+            return true;
         }
         if(opponent.MasterStartingLocation == activePlayer.MasterPiece.tile){
-            currentPlayerWon = true;
+            Debug.Log(activePlayer + " Sat on " + opponent + "'s throne");
+            return true;
         }
-        if(opponent.GetAvailablePlayerPieces().Count == 0){
-            currentPlayerWon = true;
+        if(opponent.AvailablePieces.Count == 0){
+            Debug.Log(opponent + " Has no pieces to move");
+            return true;
         }
+
+        return false;
     }
 
     private void ChangeActivePlayer(){
-        if(activePlayer == BluePlayer){
-            activePlayer = RedPlayer;
-        }
-        else {
-            activePlayer = BluePlayer;
-        }
+        activePlayer = activePlayer == BluePlayer ? RedPlayer : BluePlayer;
     }
 
     private void ExchangeCards(){
@@ -76,7 +93,7 @@ public class Controller : MonoBehaviour
         activePlayer.ResetSelections();
     }
 
-    private void ConfirmMove(){
+    private bool MoveConfirmed(){
         focusedLocationTile = activePlayer.focusedLocationTile;
         focusedMoveCard = activePlayer.focusedMoveCard;
         focusedPlayerPiece = activePlayer.focusedPlayerPiece;
@@ -86,12 +103,13 @@ public class Controller : MonoBehaviour
                 focusedLocationTile.piece.Captured();
                 }
             focusedPlayerPiece.Move(focusedLocationTile);
-            turnComplete = true;
         }
         else {
             Debug.Log("Cannot move " + focusedPlayerPiece + " to " + focusedLocationTile + " using " + focusedMoveCard);
             focusedLocationTile = null;
         }
+
+        return (focusedLocationTile != null);
     }
 
     private bool IsValidMove(PlayerPiece chosenPlayerPiece, MapLocation chosenLocationTile, MoveCard chosenMoveCard){

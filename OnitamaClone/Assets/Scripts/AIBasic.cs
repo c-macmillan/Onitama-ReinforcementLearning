@@ -13,13 +13,12 @@ public class AIBasic : Player
     }
 
     override protected void ChoosePiece(){
-        List<PlayerPiece> availablePieces = GetAvailablePlayerPieces();
-        if(availablePieces.Count == 0){
+        if(AvailablePieces.Count == 0){
             ConcedeGame();
             return;
         }
-        int index = Random.Range(0, availablePieces.Count);
-        focusedPlayerPiece = availablePieces[index];
+        int index = Random.Range(0, AvailablePieces.Count);
+        focusedPlayerPiece = AvailablePieces[index];
     }
 
     override protected void ChooseMove(){

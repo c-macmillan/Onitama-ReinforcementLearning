@@ -9,6 +9,7 @@ public class Player : MonoBehaviour{
     [SerializeField] protected Controller controller;
     [SerializeField] protected MoveCard[] PlayerMoveCards;
     [SerializeField] protected PlayerColor OwnerColor;
+    public List<PlayerPiece> AvailablePieces {protected set; get;}
     public PlayerPiece MasterPiece;
     public MapLocation MasterStartingLocation;
     protected List<Vector2Int> _validMoveLocations =>  controller.GetValidMoves(focusedMoveCard, focusedPlayerPiece);
@@ -23,23 +24,33 @@ public class Player : MonoBehaviour{
     }
 
     private void Start(){
-        SetMasterPiece();
+        AvailablePieces = new List<PlayerPiece>();
+        FindMyPieces();
     }
-
-    private void SetMasterPiece(){
-        foreach(PlayerPiece piece in GetAvailablePlayerPieces()){
-            if(piece.isMaster){
-                MasterPiece = piece;
-                MasterStartingLocation = piece.tile;
+    public void TakeTurn(){
+        Debug.Log(this + " is starting their turn");
+        ChooseCard();
+        ChoosePiece();
+        ChooseMove();
+        controller.EndTurn();
+    }
+[ContextMenu("FindMyPieces")]
+    private void FindMyPieces(){
+        foreach(PlayerPiece _piece in GetAvailablePlayerPieces()){
+            Debug.Log("Found " + _piece + " and added it to available pieces");
+            if(_piece.isMaster){
+                MasterPiece = _piece;
+                MasterStartingLocation = _piece.tile;
             }
+            AvailablePieces.Add(_piece);
         }
     }
 
-    public bool HasMaster(){
-        return (GetAvailablePlayerPieces().Contains(MasterPiece));
-    }
+    private List<PlayerPiece> GetAvailablePlayerPieces(){
+        if(AvailablePieces.Count != 0){
+            return AvailablePieces;
+        }
 
-    public List<PlayerPiece> GetAvailablePlayerPieces(){
         List<PlayerPiece> _activePlayerPieces = new List<PlayerPiece>();
         PlayerPiece[] _allPieces = FindObjectsOfType<PlayerPiece>();
         foreach(PlayerPiece _playerPiece in _allPieces){
@@ -51,17 +62,10 @@ public class Player : MonoBehaviour{
         return _activePlayerPieces;
     }
 
-    public void TakeTurn(){
-        if(focusedMoveCard == null){
-            ChooseCard();
-        }
-        if(focusedPlayerPiece == null){
-            ChoosePiece();
-        }
-        if(focusedLocationTile == null){
-        ChooseMove();
-        }
+    public void RemoveFromBoard(PlayerPiece _piece){
+        AvailablePieces.Remove(_piece);
     }
+
     virtual protected void ChooseCard(){
     }
 

@@ -11,17 +11,10 @@ public class PlayerPiece : MonoBehaviour
     public GameMap gameMap;
     public MapLocation tile;
 
-    // Start is called before the first frame update
     void Start()
     {
         gameMap = GameObject.Find("GameBoard").GetComponent<GameMap>();
         Debug.Log("Found " + gameMap);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //this.transform.position = gameMap.MapIndexToWorld(Location.x,Location.y);
     }
 
     public void Move(MapLocation targetLocation){
@@ -35,6 +28,7 @@ public class PlayerPiece : MonoBehaviour
     public void Captured(){
         Debug.Log(this + " has been captured");
         if(this.isMaster){ Debug.Log((object)("PLAYER " + this.PlayerOwner + " JUST LOST!!!!"));}
+        PlayerOwner.RemoveFromBoard(this);
         Destroy(this.gameObject);
     }
 }
