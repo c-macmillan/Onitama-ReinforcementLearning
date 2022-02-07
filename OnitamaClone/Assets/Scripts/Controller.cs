@@ -30,12 +30,12 @@ public class Controller : MonoBehaviour
     private void Update(){
         if(_hasStarted == false){
             _hasStarted = true;
-            Debug.Log("This should only be called once?");
             activePlayer.TakeTurn();
         }
     }
 
     public void EndTurn(){
+        Debug.Log(activePlayer + " is ending their turn");
         if(MoveConfirmed() == false){
             activePlayer.TakeTurn();
             return;

@@ -32,12 +32,12 @@ public class Player : MonoBehaviour{
         ChooseCard();
         ChoosePiece();
         ChooseMove();
+        Debug.Log(this + " is trying to move " + focusedPlayerPiece + " to " + focusedLocationTile + " using " + focusedMoveCard);
         controller.EndTurn();
     }
 [ContextMenu("FindMyPieces")]
     private void FindMyPieces(){
         foreach(PlayerPiece _piece in GetAvailablePlayerPieces()){
-            Debug.Log("Found " + _piece + " and added it to available pieces");
             if(_piece.isMaster){
                 MasterPiece = _piece;
                 MasterStartingLocation = _piece.tile;
@@ -58,7 +58,6 @@ public class Player : MonoBehaviour{
                 _activePlayerPieces.Add(_playerPiece);
             }
         }
-        Debug.Log("Found " + _activePlayerPieces.Count + " Player Pieces", this);
         return _activePlayerPieces;
     }
 

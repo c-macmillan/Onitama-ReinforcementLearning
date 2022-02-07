@@ -14,11 +14,9 @@ public class PlayerPiece : MonoBehaviour
     void Start()
     {
         gameMap = GameObject.Find("GameBoard").GetComponent<GameMap>();
-        Debug.Log("Found " + gameMap);
     }
 
     public void Move(MapLocation targetLocation){
-        Debug.Log("Trying to move " + this + " to " + targetLocation);
         this.tile.piece = null;
         this.tile = targetLocation;
         targetLocation.piece = this;
