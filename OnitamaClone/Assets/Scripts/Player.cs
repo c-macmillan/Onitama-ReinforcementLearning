@@ -27,7 +27,7 @@ public class Player : MonoBehaviour{
         AvailablePieces = new List<PlayerPiece>();
         FindMyPieces();
     }
-    public void TakeTurn(){
+    public virtual void TakeTurn(){
         Debug.Log(this + " is starting their turn");
         ChooseCard();
         ChoosePiece();
@@ -35,6 +35,15 @@ public class Player : MonoBehaviour{
         Debug.Log(this + " is trying to move " + focusedPlayerPiece + " to " + focusedLocationTile + " using " + focusedMoveCard);
         controller.EndTurn();
     }
+
+    public virtual void Clicked(MapLocation clickedLocation){ 
+    }
+
+    public virtual void Clicked(MoveCard clickedMoveCard){
+    }
+    public virtual void Clicked(PlayerPiece clickedPiece){
+    }
+    
 [ContextMenu("FindMyPieces")]
     private void FindMyPieces(){
         foreach(PlayerPiece _piece in GetAvailablePlayerPieces()){

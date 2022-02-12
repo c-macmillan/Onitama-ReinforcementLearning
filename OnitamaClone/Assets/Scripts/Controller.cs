@@ -15,7 +15,6 @@ public class Controller : MonoBehaviour
     public PlayerPiece focusedPlayerPiece;
     public MoveCard focusedMoveCard;
     public MapLocation focusedLocationTile;
-    private string LOCATION_TAG = "Location";
     private bool _hasStarted = false;
 
     private void Awake() {
@@ -40,7 +39,7 @@ public class Controller : MonoBehaviour
             activePlayer.TakeTurn();
             return;
         }
-        if(HasCurrentPlayerWon()){
+        else if(HasCurrentPlayerWon()){
             WinScreen();
         }
         else {
@@ -160,23 +159,6 @@ public class Controller : MonoBehaviour
         card = deckOfCards[i];
         deckOfCards.RemoveAt(i);
         return card;
-    }
-
-    public void Clicked(MapLocation clickedLocation){
-        if(clickedLocation.tag == LOCATION_TAG){
-            focusedLocationTile = clickedLocation;
-        }   
-    }
-
-    public void Clicked(MoveCard clickedMoveCard){
-        if(clickedMoveCard.currentOwner == activePlayer){
-            focusedMoveCard = clickedMoveCard;
-        }
-    }
-    public void Clicked(PlayerPiece clickedPiece){
-        if(clickedPiece.tag == "Piece"){
-            focusedPlayerPiece = clickedPiece;
-        }
     }
 
     private List<Vector2Int> MapMovesToBoardLocations(List<Vector2Int> possibleLocations, PlayerPiece focusedPiece){

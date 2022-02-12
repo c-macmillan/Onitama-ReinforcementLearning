@@ -22,16 +22,16 @@ public class Clickable : MonoBehaviour
         if(Input.GetMouseButton(0) & !clicked){
             if(clickedObject.GetComponent<MapLocation>()){
                 clickedLocation = clickedObject.GetComponent<MapLocation>();
-                controller.Clicked(clickedLocation);
+                controller.activePlayer.Clicked(clickedLocation);
                 }
 
             if(clickedObject.GetComponent<PlayerPiece>()){
                 clickedPiece = clickedObject.GetComponent<PlayerPiece>();
-                controller.Clicked(clickedPiece);}
+                controller.activePlayer.Clicked(clickedPiece);}
 
             if(clickedObject.GetComponent<MoveCard>()){
                 clickedMoveCard = clickedObject.GetComponent<MoveCard>();
-                controller.Clicked(clickedMoveCard);}
+                controller.activePlayer.Clicked(clickedMoveCard);}
             clicked = true;
         }
     }
