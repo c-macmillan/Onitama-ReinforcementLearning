@@ -178,6 +178,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4002541942922197422, guid: 311c1d9f1de199644862df67b802a669, type: 3}
+      propertyPath: currentOwner
+      value: 
+      objectReference: {fileID: 1583375975}
     - target: {fileID: 4002541942922197423, guid: 311c1d9f1de199644862df67b802a669, type: 3}
       propertyPath: m_Name
       value: Red_MoveCard2
@@ -394,6 +398,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4002541942922197422, guid: 311c1d9f1de199644862df67b802a669, type: 3}
+      propertyPath: currentOwner
+      value: 
+      objectReference: {fileID: 1583375975}
     - target: {fileID: 4002541942922197423, guid: 311c1d9f1de199644862df67b802a669, type: 3}
       propertyPath: m_Name
       value: Red_MoveCard1
@@ -779,7 +787,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1583375974}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bad8ba8ed97ec8045be3346683a43bcb, type: 3}
+  m_Script: {fileID: 11500000, guid: afe9df48a710d8d47a411a9c2528a02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1111010091}

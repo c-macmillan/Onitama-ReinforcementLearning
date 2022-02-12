@@ -7,15 +7,16 @@ using Random = UnityEngine.Random;
 //This is the base class for all AI and human players, it should not be set to a specific player
 public class Player : MonoBehaviour{
     [SerializeField] protected Controller controller;
-    [SerializeField] protected MoveCard[] PlayerMoveCards;
+    [SerializeField] public MoveCard[] PlayerMoveCards;
     [SerializeField] protected PlayerColor OwnerColor;
     public List<PlayerPiece> AvailablePieces {protected set; get;}
     public PlayerPiece MasterPiece;
     public MapLocation MasterStartingLocation;
-    protected List<Vector2Int> _validMoveLocations =>  controller.GetValidMoves(focusedMoveCard, focusedPlayerPiece);
+    protected List<Vector2Int> _validMoveLocations =>  controller.GetValidMoveLocations(focusedMoveCard, focusedPlayerPiece);
     public PlayerPiece focusedPlayerPiece {protected set; get;}
     public MoveCard focusedMoveCard {protected set; get;}
     public MapLocation focusedLocationTile {protected set; get;}
+    protected Player opponent;
 
     private void Awake() {
         if(controller == null){
@@ -26,6 +27,8 @@ public class Player : MonoBehaviour{
     private void Start(){
         AvailablePieces = new List<PlayerPiece>();
         FindMyPieces();
+        opponent = controller.BluePlayer == this ? controller.RedPlayer : controller.BluePlayer;
+        Debug.Log(this + " has an opponent of " + opponent);
     }
     public virtual void TakeTurn(){
         Debug.Log(this + " is starting their turn");
@@ -43,7 +46,7 @@ public class Player : MonoBehaviour{
     }
     public virtual void Clicked(PlayerPiece clickedPiece){
     }
-    
+
 [ContextMenu("FindMyPieces")]
     private void FindMyPieces(){
         foreach(PlayerPiece _piece in GetAvailablePlayerPieces()){

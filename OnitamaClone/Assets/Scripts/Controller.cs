@@ -113,11 +113,11 @@ public class Controller : MonoBehaviour
 
     private bool IsValidMove(PlayerPiece chosenPlayerPiece, MapLocation chosenLocationTile, MoveCard chosenMoveCard){
         
-        List<Vector2Int> validMoves = GetValidMoves(chosenMoveCard, chosenPlayerPiece);
+        List<Vector2Int> validMoves = GetValidMoveLocations(chosenMoveCard, chosenPlayerPiece);
         return validMoves.Contains(chosenLocationTile.Location);
     }
 
-    public List<Vector2Int> GetValidMoves(MoveCard chosenCard, PlayerPiece chosenPiece){
+    public List<Vector2Int> GetValidMoveLocations(MoveCard chosenCard, PlayerPiece chosenPiece){
         List<Vector2Int> possibleMoves = MapMovesToBoardLocations(chosenCard.GetMoves(), chosenPiece);
 
         List<Vector2Int> validMoves = new List<Vector2Int>();

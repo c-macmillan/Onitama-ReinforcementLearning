@@ -16,12 +16,6 @@ public class BoardMap : MonoBehaviour
         CreateMap(Mapx, Mapy);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void CreateMap(int x, int y)
     {
         for (int i = 0; i < Mapx; i++)
