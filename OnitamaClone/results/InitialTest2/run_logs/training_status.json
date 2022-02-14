@@ -1,0 +1,29 @@
+{
+    "OnitamaPlayer": {
+        "checkpoints": [
+            {
+                "steps": 16176,
+                "file_path": "results\\InitialTest2\\OnitamaPlayer\\OnitamaPlayer-16176.onnx",
+                "reward": -244.0313725490196,
+                "creation_time": 1644816639.7487092,
+                "auxillary_file_paths": [
+                    "results\\InitialTest2\\OnitamaPlayer\\OnitamaPlayer-16176.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 16176,
+            "file_path": "results\\InitialTest2\\OnitamaPlayer.onnx",
+            "reward": -244.0313725490196,
+            "creation_time": 1644816639.7487092,
+            "auxillary_file_paths": [
+                "results\\InitialTest2\\OnitamaPlayer\\OnitamaPlayer-16176.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

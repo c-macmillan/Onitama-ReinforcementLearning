@@ -5,7 +5,7 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
     public GameMap GameMap;
-    public List<ScriptableObjectMoveCard> deckOfCards;
+    public DeckOfCards deckOfCards;
     public MoveCard[] redPlayerCards = new MoveCard[2];
     public MoveCard[] bluePlayerCards = new MoveCard[2];
     public MoveCard sidelineCard;
@@ -15,26 +15,34 @@ public class Controller : MonoBehaviour
     public PlayerPiece focusedPlayerPiece;
     public MoveCard focusedMoveCard;
     public MapLocation focusedLocationTile;
-    private bool _hasStarted = false;
+    private bool _activePlayerStartedTurn = false;
+    public bool PlayTheGame = false;
+    public bool GameOver{private set; get;} = false;
 
-    private void Awake() {
+    private void Start() {
         DealCards();
         activePlayer = sidelineCard.moveCardData.firstPlayerColor == PlayerColor.RED_PLAYER ? RedPlayer : BluePlayer;
-        GameMap.BoardSetUp();
-    }
-    private void Start() {
-        
+        AssignPiecesToPlayers();
+        //GameMap.BoardSetUp();
     }
 
     private void Update(){
-        if(_hasStarted == false){
-            _hasStarted = true;
+        if(PlayTheGame == false){
+            return;
+        }
+        else if(_activePlayerStartedTurn == false){
+            _activePlayerStartedTurn = true;
             activePlayer.TakeTurn();
         }
     }
 
     public void EndTurn(){
-        Debug.Log(activePlayer + " is ending their turn");
+        Player opponent = activePlayer == BluePlayer ? RedPlayer : BluePlayer;
+        if(activePlayer.HasConceded){
+            activePlayer = opponent;
+            WinScreen();
+            return;
+        }
         if(MoveConfirmed() == false){
             activePlayer.TakeTurn();
             return;
@@ -46,23 +54,61 @@ public class Controller : MonoBehaviour
             ChangeActivePlayer();
             ExchangeCards();
             ResetSelections();
-            activePlayer.TakeTurn();
+            _activePlayerStartedTurn = false;
         }
     }
 
     private void WinScreen(){
         Debug.Log(activePlayer + " WINS !!!!!!");
+        GameOver = true;
+        Player opponentPlayer = activePlayer == BluePlayer ? RedPlayer : BluePlayer;
+        OnitamaAgent activePlayerAgent;
+        OnitamaAgent opponentPlayerAgent;
+        if (activePlayer.TryGetComponent<OnitamaAgent>(out activePlayerAgent))
+        {
+            if (activePlayerAgent.isActiveAndEnabled)
+            {
+                activePlayerAgent.AddReward(50);
+                activePlayerAgent.EndEpisode();
+            }
+        }
+        else if (opponentPlayer.TryGetComponent<OnitamaAgent>(out opponentPlayerAgent))
+        {
+            if (opponentPlayerAgent.isActiveAndEnabled)
+            {
+                opponentPlayerAgent.AddReward(-50);
+                opponentPlayerAgent.EndEpisode();
+            }
+        }
+        //PlayTheGame = false;
+        RestartGame();
 
+    }
+    private void RestartGame(){
+        Debug.Log("RESTARTING GAME");
+        ResetGame();
+        DealCards();
+        activePlayer = sidelineCard.moveCardData.firstPlayerColor == PlayerColor.RED_PLAYER ? RedPlayer : BluePlayer;
+        _activePlayerStartedTurn = false;
+        GameOver = false;
+    }
+
+
+    private void ResetGame(){
+        BluePlayer.HasConceded = false;
+        RedPlayer.HasConceded = false;
+        BluePlayer.ResetPieces();
+        RedPlayer.ResetPieces();
+        BluePlayer.ResetSelections();
+        RedPlayer.ResetSelections();
+        ResetSelections();
+        deckOfCards.ResetDeck();
+        AssignPiecesToPlayers();
     }
 
     private bool HasCurrentPlayerWon(){
         Player opponent = activePlayer == RedPlayer ? BluePlayer : RedPlayer;
         if(opponent.AvailablePieces.Contains(opponent.MasterPiece) == false){
-            Debug.Log(opponent + " has these pieces left: ");
-            foreach(PlayerPiece _piece in opponent.AvailablePieces){
-                Debug.Log(_piece);
-            }
-            Debug.Log(opponent + " Lost Their Master");
             return true;
         }
         if(opponent.MasterStartingLocation == activePlayer.MasterPiece.tile){
@@ -75,6 +121,38 @@ public class Controller : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void AssignPiecesToPlayers()
+    {
+        PlayerPiece[] _allPieces = FindObjectsOfType<PlayerPiece>();
+        foreach (PlayerPiece _playerPiece in _allPieces)
+        {
+            if (_playerPiece.PlayerOwnerColor == BluePlayer.OwnerColor)
+            {
+                if (BluePlayer.AvailablePieces.Contains(_playerPiece) == false)
+                {
+                    BluePlayer.AvailablePieces.Add(_playerPiece);
+                    if (_playerPiece.isMaster & BluePlayer.MasterPiece == null)
+                    {
+                        BluePlayer.MasterPiece = _playerPiece;
+                        BluePlayer.MasterStartingLocation = _playerPiece.tile;
+                    }
+                }
+            }
+            else if (_playerPiece.PlayerOwnerColor == RedPlayer.OwnerColor)
+            {
+                if (RedPlayer.AvailablePieces.Contains(_playerPiece) == false)
+                {
+                    RedPlayer.AvailablePieces.Add(_playerPiece);
+                    if (_playerPiece.isMaster & RedPlayer.MasterPiece == null)
+                    {
+                        RedPlayer.MasterPiece = _playerPiece;
+                        RedPlayer.MasterStartingLocation = _playerPiece.tile;
+                    }
+                }
+            }
+        }
     }
 
     private void ChangeActivePlayer(){
@@ -104,7 +182,6 @@ public class Controller : MonoBehaviour
             focusedPlayerPiece.Move(focusedLocationTile);
         }
         else {
-            Debug.Log("Cannot move " + focusedPlayerPiece + " to " + focusedLocationTile + " using " + focusedMoveCard);
             focusedLocationTile = null;
         }
 
@@ -142,23 +219,15 @@ public class Controller : MonoBehaviour
 
     private void DealCards(){
         foreach (MoveCard card in redPlayerCards){
-            card.moveCardData = DrawRandomCard();
+            card.moveCardData = deckOfCards.DrawRandomCard();
             card.currentOwner = RedPlayer;
         }
         foreach (MoveCard card in bluePlayerCards){
-            card.moveCardData = DrawRandomCard();
+            card.moveCardData = deckOfCards.DrawRandomCard();
             card.currentOwner = BluePlayer;
         }
-        sidelineCard.moveCardData = DrawRandomCard();
+        sidelineCard.moveCardData = deckOfCards.DrawRandomCard();
         sidelineCard.currentOwner = null;
-    }
-
-    private ScriptableObjectMoveCard DrawRandomCard(){
-        int i = Random.Range(0, deckOfCards.Count);
-        ScriptableObjectMoveCard card;
-        card = deckOfCards[i];
-        deckOfCards.RemoveAt(i);
-        return card;
     }
 
     private List<Vector2Int> MapMovesToBoardLocations(List<Vector2Int> possibleLocations, PlayerPiece focusedPiece){

@@ -7,17 +7,18 @@ public class AIGreedy : Player
     private List<Vector2Int> vulnerableLocations;
     public override void TakeTurn()
     {
+        if(controller.GameOver){
+            return;
+        }
         SelectBestMove();
         controller.EndTurn();
     }
 
-    private List<Vector2Int> GetVulnerableLocations(){
+    protected List<Vector2Int> GetVulnerableLocations(){
         List<Vector2Int> _vulnerableLocations = new List<Vector2Int>();
         foreach(PlayerPiece opponentPiece in opponent.AvailablePieces)
         {
-            Debug.Log("Checking possibilities for " + opponentPiece);
             foreach(MoveCard oppMoveCard in opponent.PlayerMoveCards){
-                Debug.Log("Checking possibilities for " + oppMoveCard);
                 foreach(Vector2Int location in controller.GetValidMoveLocations(oppMoveCard, opponentPiece)){
                     _vulnerableLocations.Add(location);
                 }
@@ -26,7 +27,7 @@ public class AIGreedy : Player
         return _vulnerableLocations;
     }
 
-    private void SelectBestMove(){
+    protected void SelectBestMove(){
         Move bestMove = new Move();
         int bestMoveScore = int.MinValue;
         vulnerableLocations = GetVulnerableLocations();
@@ -45,7 +46,7 @@ public class AIGreedy : Player
     }
 
     private int ScoreMove(Move move){
-        int moveScore = 0;
+        int moveScore = Random.Range(-1,1);
         if(vulnerableLocations.Contains(move.chosenPlayerPiece.tile.Location)){
             moveScore += move.chosenPlayerPiece == MasterPiece ? 20 : 1;
         }
@@ -78,17 +79,5 @@ public class AIGreedy : Player
             }
         }
         return allValidMoves;
-    }
-
-    public struct Move{
-        public Move(PlayerPiece _chosenPlayerPiece, MoveCard _chosenMoveCard, MapLocation _targetLocation){
-            chosenPlayerPiece = _chosenPlayerPiece;
-            chosenMoveCard = _chosenMoveCard;
-            targetMapLocation = _targetLocation;
-        }
-
-        public PlayerPiece chosenPlayerPiece;
-        public MoveCard chosenMoveCard;
-        public MapLocation targetMapLocation;
     }
 }

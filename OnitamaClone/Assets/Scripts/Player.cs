@@ -2,36 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 using Random = UnityEngine.Random;
 
 //This is the base class for all AI and human players, it should not be set to a specific player
-public class Player : MonoBehaviour{
+public class Player : MonoBehaviour
+{
     [SerializeField] protected Controller controller;
     [SerializeField] public MoveCard[] PlayerMoveCards;
-    [SerializeField] protected PlayerColor OwnerColor;
-    public List<PlayerPiece> AvailablePieces {protected set; get;}
+    [SerializeField] public PlayerColor OwnerColor;
+    public List<PlayerPiece> AvailablePieces { protected set; get; }
+    public PlayerPiece[] StartingPieces;
     public PlayerPiece MasterPiece;
-    public MapLocation MasterStartingLocation;
-    protected List<Vector2Int> _validMoveLocations =>  controller.GetValidMoveLocations(focusedMoveCard, focusedPlayerPiece);
-    public PlayerPiece focusedPlayerPiece {protected set; get;}
-    public MoveCard focusedMoveCard {protected set; get;}
-    public MapLocation focusedLocationTile {protected set; get;}
+    [HideInInspector] public MapLocation MasterStartingLocation;
+    protected List<Vector2Int> _validMoveLocations => controller.GetValidMoveLocations(focusedMoveCard, focusedPlayerPiece);
+    public PlayerPiece focusedPlayerPiece;
+    public MoveCard focusedMoveCard;
+    public MapLocation focusedLocationTile;
+    public bool HasConceded = false;
     protected Player opponent;
 
-    private void Awake() {
-        if(controller == null){
+    private void Awake()
+    {
+        if (controller == null)
+        {
             controller = GetComponent<Controller>();
         }
     }
 
-    private void Start(){
+    private void Start()
+    {
         AvailablePieces = new List<PlayerPiece>();
-        FindMyPieces();
         opponent = controller.BluePlayer == this ? controller.RedPlayer : controller.BluePlayer;
-        Debug.Log(this + " has an opponent of " + opponent);
     }
-    public virtual void TakeTurn(){
-        Debug.Log(this + " is starting their turn");
+    public virtual void TakeTurn()
+    {
         ChooseCard();
         ChoosePiece();
         ChooseMove();
@@ -39,60 +44,96 @@ public class Player : MonoBehaviour{
         controller.EndTurn();
     }
 
-    public virtual void Clicked(MapLocation clickedLocation){ 
+    public virtual void Clicked(MapLocation clickedLocation)
+    {
     }
 
-    public virtual void Clicked(MoveCard clickedMoveCard){
+    public virtual void Clicked(MoveCard clickedMoveCard)
+    {
     }
-    public virtual void Clicked(PlayerPiece clickedPiece){
+    public virtual void Clicked(PlayerPiece clickedPiece)
+    {
     }
 
-[ContextMenu("FindMyPieces")]
-    private void FindMyPieces(){
-        foreach(PlayerPiece _piece in GetAvailablePlayerPieces()){
-            if(_piece.isMaster){
-                MasterPiece = _piece;
-                MasterStartingLocation = _piece.tile;
+    public List<float> GetPiecesStateInfo()
+    {
+        List<float> _piecesStateInfo = new List<float>();
+        foreach (PlayerPiece _piece in StartingPieces)
+        {
+            if (_piece.isActiveAndEnabled)
+            {
+                _piecesStateInfo.Add(_piece.tile.Location.x);
+                _piecesStateInfo.Add(_piece.tile.Location.y);
+                _piecesStateInfo.Add(_piece.isMaster ? 1f : 0f);
             }
-            AvailablePieces.Add(_piece);
-        }
-    }
-
-    private List<PlayerPiece> GetAvailablePlayerPieces(){
-        if(AvailablePieces.Count != 0){
-            return AvailablePieces;
-        }
-
-        List<PlayerPiece> _activePlayerPieces = new List<PlayerPiece>();
-        PlayerPiece[] _allPieces = FindObjectsOfType<PlayerPiece>();
-        foreach(PlayerPiece _playerPiece in _allPieces){
-            if(_playerPiece.PlayerOwner == this){
-                _activePlayerPieces.Add(_playerPiece);
+            else
+            {
+                _piecesStateInfo.Add(-1);
+                _piecesStateInfo.Add(-1);
+                _piecesStateInfo.Add(-1);
             }
         }
-        return _activePlayerPieces;
+
+        while (_piecesStateInfo.Count < 15)
+        {
+            _piecesStateInfo.Add(-1f);
+        }
+
+        return _piecesStateInfo;
+    }
+    public List<float> GetMoveCardsInfo()
+    {
+        List<float> _moveCardsInfo = new List<float>();
+        foreach (MoveCard moveCard in PlayerMoveCards)
+        {
+            foreach (float f in moveCard.GetMovesAsFloat())
+            {
+                _moveCardsInfo.Add(f);
+            }
+        }
+        while (_moveCardsInfo.Count < 16)
+        {
+            _moveCardsInfo.Add(float.MinValue);
+        }
+        return _moveCardsInfo;
     }
 
-    public void RemoveFromBoard(PlayerPiece _piece){
+    public void RemoveFromBoard(PlayerPiece _piece)
+    {
         AvailablePieces.Remove(_piece);
     }
 
-    virtual protected void ChooseCard(){
+    virtual protected void ChooseCard()
+    {
     }
 
-    virtual protected void ChoosePiece(){
+    virtual protected void ChoosePiece()
+    {
     }
 
-    virtual protected void ChooseMove(){
+    virtual protected void ChooseMove()
+    {
     }
 
-    public void ResetSelections(){
+    public void ResetSelections()
+    {
         focusedPlayerPiece = null;
         focusedMoveCard = null;
         focusedLocationTile = null;
-    }   
+    }
 
-    protected void ConcedeGame(){
+    public void ResetPieces()
+    {
+        foreach (PlayerPiece _piece in StartingPieces)
+        {
+            _piece.MoveToStart();
+            _piece.gameObject.SetActive(true);
+        }
+    }
+
+    protected virtual void ConcedeGame()
+    {
         Debug.Log(this + " concedes because they have no possible turn");
-    }   
+        HasConceded = true;
+    }
 }

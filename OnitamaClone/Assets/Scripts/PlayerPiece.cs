@@ -10,23 +10,32 @@ public class PlayerPiece : MonoBehaviour
     //public Vector2Int Location;
     public GameMap gameMap;
     public MapLocation tile;
+    private MapLocation startingTile;
+    [SerializeField] private Controller controller;
 
     void Start()
     {
         gameMap = GameObject.Find("GameBoard").GetComponent<GameMap>();
+        startingTile = tile;
+        PlayerOwner = PlayerOwnerColor == PlayerColor.BLUE_PLAYER ? controller.BluePlayer : controller.RedPlayer;
     }
 
     public void Move(MapLocation targetLocation){
-        this.tile.piece = null;
+        if(this.tile != null){
+            this.tile.piece = null;
+        }
         this.tile = targetLocation;
         targetLocation.piece = this;
         transform.position = new Vector3(targetLocation.transform.position.x, transform.position.y, targetLocation.transform.position.z);
     }
 
     public void Captured(){
-        Debug.Log(this + " has been captured");
-        if(this.isMaster){ Debug.Log((object)("PLAYER " + this.PlayerOwner + " JUST LOST!!!!"));}
+        tile = null;
         PlayerOwner.RemoveFromBoard(this);
-        Destroy(this.gameObject);
+        this.gameObject.SetActive(false);
+    }
+
+    public void MoveToStart(){
+        Move(startingTile);
     }
 }

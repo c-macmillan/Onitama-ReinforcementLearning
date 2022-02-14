@@ -18,6 +18,23 @@ public class GameMap : MonoBehaviour
     private Transform GameBoard;
     public MapLocation[,] MapLocations = new MapLocation[5, 5];
 
+    private void Start() {
+        MapLocation[] allMapLocations = GetComponentsInChildren<MapLocation>();
+        for (int y = 0; y < MapY; y++)
+        {
+            for (int x = 0; x < MapX; x++)
+            {
+            MapLocations[x, y] = allMapLocations[x + y * 5];
+            }
+        }
+
+        foreach (var mapLocation in allMapLocations)
+        {
+            
+        }
+        
+    }
+
     public void BoardSetUp()
     {
         GameBoard = this.transform;
