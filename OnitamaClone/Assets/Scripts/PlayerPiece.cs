@@ -15,7 +15,7 @@ public class PlayerPiece : MonoBehaviour
 
     void Start()
     {
-        gameMap = GameObject.Find("GameBoard").GetComponent<GameMap>();
+        gameMap = GetComponentInParent<GameMap>();
         startingTile = tile;
         PlayerOwner = PlayerOwnerColor == PlayerColor.BLUE_PLAYER ? controller.BluePlayer : controller.RedPlayer;
     }

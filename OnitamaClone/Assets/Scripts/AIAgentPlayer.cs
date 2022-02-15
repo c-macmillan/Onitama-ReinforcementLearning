@@ -38,7 +38,6 @@ public class AIAgentPlayer : AIGreedy
         onitamaAgent.AddReward(ScoreMove(move));
         if (move.chosenPlayerPiece.isActiveAndEnabled == false)
         {
-            Debug.Log("Chose a captured piece");
             ConcedeGame();
 
         }
@@ -58,28 +57,39 @@ public class AIAgentPlayer : AIGreedy
             moveScore -= 50;
             return moveScore;
         }
+        else if(controller.GetValidMoveLocations(move.chosenMoveCard, move.chosenPlayerPiece).Contains(move.targetMapLocation.Location) == false){
+            moveScore -= 50;
+            return moveScore;
+        }
+        else{
+            moveScore += 25;
+        }
+
 
         if (vulnerableLocations.Contains(move.chosenPlayerPiece.tile.Location))
         {
-            moveScore += move.chosenPlayerPiece == MasterPiece ? 30 : 2;
+            moveScore += move.chosenPlayerPiece == MasterPiece ? 100 : 25;
         }
 
         if (vulnerableLocations.Contains(move.targetMapLocation.Location))
         {
-            moveScore -= move.chosenPlayerPiece == MasterPiece ? 20 : 1;
+            moveScore -= move.chosenPlayerPiece == MasterPiece ? 200 : 15;
         }
 
+        if(opponent == null){
+            opponent = this == controller.RedPlayer ? controller.BluePlayer : controller.RedPlayer;
+        }
         List<PlayerPiece> opponentPieces = opponent.AvailablePieces;
         foreach (PlayerPiece opponentPiece in opponentPieces)
         {
             if (opponentPiece.tile == move.targetMapLocation)
             {
-                moveScore += opponentPiece.isMaster ? 50 : 5;
+                moveScore += opponentPiece.isMaster ? 500 : 50;
             }
         }
         if (move.chosenPlayerPiece.isMaster & move.targetMapLocation.isThrone & move.targetMapLocation != MasterStartingLocation)
         {
-            moveScore += 50;
+            moveScore += 500;
         }
 
         return moveScore;
@@ -88,6 +98,7 @@ public class AIAgentPlayer : AIGreedy
     protected override void ConcedeGame()
     {
         base.ConcedeGame();
+        onitamaAgent.AddReward(-500);
         controller.EndTurn();
     }
 }

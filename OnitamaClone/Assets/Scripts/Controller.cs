@@ -85,7 +85,6 @@ public class Controller : MonoBehaviour
 
     }
     private void RestartGame(){
-        Debug.Log("RESTARTING GAME");
         ResetGame();
         DealCards();
         activePlayer = sidelineCard.moveCardData.firstPlayerColor == PlayerColor.RED_PLAYER ? RedPlayer : BluePlayer;
@@ -174,6 +173,9 @@ public class Controller : MonoBehaviour
         focusedLocationTile = activePlayer.focusedLocationTile;
         focusedMoveCard = activePlayer.focusedMoveCard;
         focusedPlayerPiece = activePlayer.focusedPlayerPiece;
+        if(focusedLocationTile == null | focusedMoveCard == null | focusedPlayerPiece == null){
+            return false;
+        }
 
         if(IsValidMove(focusedPlayerPiece, focusedLocationTile, focusedMoveCard)){
             if(focusedLocationTile.piece != null){

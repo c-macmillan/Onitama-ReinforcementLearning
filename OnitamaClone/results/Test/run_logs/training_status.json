@@ -1,0 +1,65 @@
+{
+    "OnitamaPlayer": {
+        "checkpoints": [
+            {
+                "steps": 149963,
+                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-149963.onnx",
+                "reward": -1057.7727272727273,
+                "creation_time": 1644892220.3895419,
+                "auxillary_file_paths": [
+                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-149963.pt"
+                ]
+            },
+            {
+                "steps": 173136,
+                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-173136.onnx",
+                "reward": -1249.2558139534883,
+                "creation_time": 1644893176.1856523,
+                "auxillary_file_paths": [
+                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-173136.pt"
+                ]
+            },
+            {
+                "steps": 199986,
+                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-199986.onnx",
+                "reward": -1245.7916666666667,
+                "creation_time": 1644894327.7617252,
+                "auxillary_file_paths": [
+                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-199986.pt"
+                ]
+            },
+            {
+                "steps": 249984,
+                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-249984.onnx",
+                "reward": -1348.7469879518073,
+                "creation_time": 1644896140.2232487,
+                "auxillary_file_paths": [
+                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-249984.pt"
+                ]
+            },
+            {
+                "steps": 258522,
+                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-258522.onnx",
+                "reward": -864.7619047619048,
+                "creation_time": 1644896497.0437217,
+                "auxillary_file_paths": [
+                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-258522.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 258522,
+            "file_path": "results\\Test\\OnitamaPlayer.onnx",
+            "reward": -864.7619047619048,
+            "creation_time": 1644896497.0437217,
+            "auxillary_file_paths": [
+                "results\\Test\\OnitamaPlayer\\OnitamaPlayer-258522.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

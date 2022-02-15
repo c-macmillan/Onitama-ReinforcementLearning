@@ -8,7 +8,7 @@ public class AIBasic : Player
     private int _turnAttempts = 0;
     private int MaxIterations = 10;
     override protected void ChooseCard(){
-        int index = Random.Range(0,1);
+        int index = Random.Range(0,2);
         focusedMoveCard = PlayerMoveCards[index];
     }
 

@@ -133,7 +133,7 @@ public class Player : MonoBehaviour
 
     protected virtual void ConcedeGame()
     {
-        Debug.Log(this + " concedes because they have no possible turn");
+        Debug.Log(this + " concedes because they have no possible turn", this);
         HasConceded = true;
     }
 }
