@@ -51,7 +51,7 @@ public class AIAgentPlayer : AIGreedy
     private int ScoreMove(Move move)
     {
         var vulnerableLocations = GetVulnerableLocations();
-        int moveScore = Random.Range(-1, 1);
+        int moveScore = 0;
         if (move.chosenPlayerPiece.isActiveAndEnabled == false)
         {
             moveScore -= 50;
@@ -84,12 +84,12 @@ public class AIAgentPlayer : AIGreedy
         {
             if (opponentPiece.tile == move.targetMapLocation)
             {
-                moveScore += opponentPiece.isMaster ? 500 : 50;
+                moveScore += opponentPiece.isMaster ? 1000 : 100;
             }
         }
         if (move.chosenPlayerPiece.isMaster & move.targetMapLocation.isThrone & move.targetMapLocation != MasterStartingLocation)
         {
-            moveScore += 500;
+            moveScore += 1000;
         }
 
         return moveScore;

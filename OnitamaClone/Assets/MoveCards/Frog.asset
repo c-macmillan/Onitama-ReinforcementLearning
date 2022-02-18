@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Frog
   m_EditorClassIdentifier: 
   availableMoves:
-  - {x: -1, y: 0}
-  - {x: 1, y: 0}
-  - {x: 0, y: -1}
-  - {x: 0, y: 2}
-  Name: Frog Attacks
-  firstPlayer: 1
-  cardSprite: {fileID: 21300000, guid: 00bfff42ebd6ce84db9bcbbeaf6d8eef, type: 3}
+  - {x: -2, y: 0}
+  - {x: -1, y: 1}
+  - {x: 1, y: -1}
+  - {x: -6, y: -6}
+  Name: Frog
+  firstPlayerColor: 0
+  cardSprite: {fileID: 21300000, guid: 01a0691a6217a7c4db5f5968282305ec, type: 3}

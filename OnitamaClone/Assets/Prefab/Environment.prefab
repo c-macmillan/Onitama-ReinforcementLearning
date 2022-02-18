@@ -180,11 +180,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingCards:
-  - {fileID: 11400000, guid: 941c4a7294d3ede4f860bd3b15451b78, type: 2}
-  - {fileID: 11400000, guid: bc577e32b5093534c8a93ec1b5e3be3d, type: 2}
-  - {fileID: 11400000, guid: 081e297cf11e5ec49b3e2d203db84427, type: 2}
-  - {fileID: 11400000, guid: 4366ba4da5ffc884f91ea4bbcc06f336, type: 2}
+  - {fileID: 11400000, guid: 980dc71d9ac720d46be8fa0ad51b5cce, type: 2}
+  - {fileID: 11400000, guid: 8bb2f14a39bd8ac4f963f3b10013bf84, type: 2}
+  - {fileID: 11400000, guid: 79c5b79df2d2b8842a1e99f587edbca1, type: 2}
   - {fileID: 11400000, guid: 688e27de2f48f464bbae1312d12f4056, type: 2}
+  - {fileID: 11400000, guid: bc577e32b5093534c8a93ec1b5e3be3d, type: 2}
+  - {fileID: 11400000, guid: 298117f7bbc0d8241b80029e42201a8b, type: 2}
+  - {fileID: 11400000, guid: 56a92a9c4d5d41c44a6ebe66fb5164bc, type: 2}
+  - {fileID: 11400000, guid: 941c4a7294d3ede4f860bd3b15451b78, type: 2}
+  - {fileID: 11400000, guid: 081e297cf11e5ec49b3e2d203db84427, type: 2}
+  - {fileID: 11400000, guid: 61072eddf87cc4c4b91d72381655ce4f, type: 2}
+  - {fileID: 11400000, guid: 2019ce48b3f83524eb4825618fd54137, type: 2}
+  - {fileID: 11400000, guid: 4366ba4da5ffc884f91ea4bbcc06f336, type: 2}
+  - {fileID: 11400000, guid: fbe1ecd5a03577f4aa7711ca52713887, type: 2}
+  - {fileID: 11400000, guid: e062809b46e02b545a5dcc16c9cd2093, type: 2}
+  - {fileID: 11400000, guid: e59ed66d183d6dd4b917801cebd1a25d, type: 2}
+  - {fileID: 11400000, guid: 1c1b12e8f8c134c4498dcbaae5533c75, type: 2}
 --- !u!1 &7182685637738854022
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,7 +315,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7182685637832063313}
-  - component: {fileID: 7182685637832063315}
+  - component: {fileID: 719698284}
   m_Layer: 0
   m_Name: BluePlayer
   m_TagString: Untagged
@@ -326,7 +337,7 @@ Transform:
   m_Father: {fileID: 560653143908983051}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7182685637832063315
+--- !u!114 &719698284
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -413,7 +424,7 @@ PrefabInstance:
     - target: {fileID: 7785211056481832390, guid: 9335ea34306f53144a207f48efa65ac8, type: 3}
       propertyPath: BluePlayer
       value: 
-      objectReference: {fileID: 7182685637832063315}
+      objectReference: {fileID: 719698284}
     - target: {fileID: 7785211056481832390, guid: 9335ea34306f53144a207f48efa65ac8, type: 3}
       propertyPath: PlayTheGame
       value: 1

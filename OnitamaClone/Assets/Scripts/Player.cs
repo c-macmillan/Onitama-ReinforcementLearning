@@ -40,7 +40,6 @@ public class Player : MonoBehaviour
         ChooseCard();
         ChoosePiece();
         ChooseMove();
-        Debug.Log(this + " is trying to move " + focusedPlayerPiece + " to " + focusedLocationTile + " using " + focusedMoveCard);
         controller.EndTurn();
     }
 

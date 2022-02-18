@@ -2,58 +2,58 @@
     "OnitamaPlayer": {
         "checkpoints": [
             {
-                "steps": 173136,
-                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-173136.onnx",
-                "reward": -1249.2558139534883,
-                "creation_time": 1644893176.1856523,
+                "steps": 899994,
+                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-899994.onnx",
+                "reward": 703.0,
+                "creation_time": 1645065384.9763474,
                 "auxillary_file_paths": [
-                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-173136.pt"
+                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-899994.pt"
                 ]
             },
             {
-                "steps": 199986,
-                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-199986.onnx",
-                "reward": -1245.7916666666667,
-                "creation_time": 1644894327.7617252,
+                "steps": 903511,
+                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-903511.onnx",
+                "reward": -900.25,
+                "creation_time": 1645065566.2408788,
                 "auxillary_file_paths": [
-                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-199986.pt"
+                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-903511.pt"
                 ]
             },
             {
-                "steps": 249984,
-                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-249984.onnx",
-                "reward": -1348.7469879518073,
-                "creation_time": 1644896140.2232487,
+                "steps": 949987,
+                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-949987.onnx",
+                "reward": -809.0625,
+                "creation_time": 1645066949.647968,
                 "auxillary_file_paths": [
-                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-249984.pt"
+                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-949987.pt"
                 ]
             },
             {
-                "steps": 258522,
-                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-258522.onnx",
-                "reward": -864.7619047619048,
-                "creation_time": 1644896497.0437217,
+                "steps": 999992,
+                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-999992.onnx",
+                "reward": -607.0508474576271,
+                "creation_time": 1645068387.5397294,
                 "auxillary_file_paths": [
-                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-258522.pt"
+                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-999992.pt"
                 ]
             },
             {
-                "steps": 273689,
-                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-273689.onnx",
-                "reward": -682.952380952381,
-                "creation_time": 1644897279.2699518,
+                "steps": 1023681,
+                "file_path": "results\\Test\\OnitamaPlayer\\OnitamaPlayer-1023681.onnx",
+                "reward": -584.0751879699249,
+                "creation_time": 1645069159.8516295,
                 "auxillary_file_paths": [
-                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-273689.pt"
+                    "results\\Test\\OnitamaPlayer\\OnitamaPlayer-1023681.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 273689,
+            "steps": 1023681,
             "file_path": "results\\Test\\OnitamaPlayer.onnx",
-            "reward": -682.952380952381,
-            "creation_time": 1644897279.2699518,
+            "reward": -584.0751879699249,
+            "creation_time": 1645069159.8516295,
             "auxillary_file_paths": [
-                "results\\Test\\OnitamaPlayer\\OnitamaPlayer-273689.pt"
+                "results\\Test\\OnitamaPlayer\\OnitamaPlayer-1023681.pt"
             ]
         }
     },
